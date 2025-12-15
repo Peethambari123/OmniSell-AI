@@ -6,42 +6,42 @@ from catalog import PRODUCTS
 
 st.set_page_config("OmniRetail IQ", layout="wide")
 
-# ------------------- STYLES (VIBRANT DASHING THEME) -------------------
+# ------------------- STYLES -------------------
 st.markdown("""
 <style>
-/* ---------- Entire App Background ---------- */
+/* ---------- App Background ---------- */
 body, .stApp {
-    background: linear-gradient(120deg, #fdfbfb, #ebedee);
+    background: linear-gradient(120deg, #f0f4f8, #e3f2fd);
     color: #333333;
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* ---------- Sidebar ---------- */
 [data-testid="stSidebar"] {
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    color: #333333;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: #ffffff;
 }
 
 /* ---------- Headers ---------- */
 h1, h2, h3, h4 { 
     font-family: 'Segoe UI', sans-serif; 
-    color: #ff3d00; 
+    color: #0d47a1; 
 }
 
 /* ---------- Product Cards ---------- */
 .stImage > img { 
     border-radius: 20px; 
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
 /* Product text styles */
-.product-name { color: #ff5722; font-size: 1.2em; font-weight: bold; }
-.product-category { color: #4caf50; font-size: 1em; font-style: italic; }
-.product-price { color: #673ab7; font-weight: bold; font-size: 1.1em; }
+.product-name { color: #1565c0; font-size: 1.2em; font-weight: bold; }
+.product-category { color: #2e7d32; font-size: 1em; font-style: italic; }
+.product-price { color: #f57c00; font-weight: bold; font-size: 1.1em; }
 
 /* ---------- Buttons ---------- */
 .stButton>button {
-    background: linear-gradient(90deg, #ff6d00, #ffab00);
+    background: linear-gradient(90deg, #ff9800, #fbc02d);
     color: #ffffff;
     font-weight: bold;
     border-radius: 12px;
@@ -49,40 +49,34 @@ h1, h2, h3, h4 {
     transition: all 0.3s ease;
 }
 .stButton>button:hover {
-    background: linear-gradient(90deg, #ffab00, #ff6d00);
+    background: linear-gradient(90deg, #fbc02d, #ff9800);
     transform: scale(1.05);
 }
 
 /* ---------- Tables ---------- */
-.dataframe tbody tr:nth-child(even) { background-color: #ffe0b2; }
-.dataframe tbody tr:nth-child(odd) { background-color: #fff3e0; }
-.dataframe thead { background-color: #ff9800; color: #ffffff; font-weight: bold; }
+.dataframe tbody tr:nth-child(even) { background-color: #e3f2fd; }
+.dataframe tbody tr:nth-child(odd) { background-color: #bbdefb; }
+.dataframe thead { background-color: #1976d2; color: #ffffff; font-weight: bold; }
 
-/* ---------- Remove Item Headers ---------- */
-h3 { color: #d32f2f; }
+/* ---------- Remove / Warning Buttons ---------- */
+.remove-button { color: #d32f2f; font-weight: bold; }
 
 /* ---------- Sidebar Inputs ---------- */
 .stTextInput>div>input, .stSelectbox>div>div>div>input, .stNumberInput>div>input, .stSlider>div>div>div>input {
     border-radius: 8px;
-    border: 1px solid #cccccc;
+    border: 1px solid #1976d2;
     padding: 6px;
 }
 
 /* ---------- Alerts ---------- */
-.stSuccess, .stInfo, .stWarning, .stError {
-    border-radius: 12px;
-    padding: 10px 15px;
-    font-weight: bold;
-}
+.stSuccess { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #388e3c; color: #ffffff; }
+.stInfo { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #0288d1; color: #ffffff; }
+.stWarning { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #fbc02d; color: #333333; }
+.stError { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #d32f2f; color: #ffffff; }
 
 /* Smooth scrollbar for sidebar */
-[data-testid="stSidebar"]::-webkit-scrollbar {
-    width: 6px;
-}
-[data-testid="stSidebar"]::-webkit-scrollbar-thumb {
-    background-color: #ff6d00;
-    border-radius: 3px;
-}
+[data-testid="stSidebar"]::-webkit-scrollbar { width: 6px; }
+[data-testid="stSidebar"]::-webkit-scrollbar-thumb { background-color: #1976d2; border-radius: 3px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -92,7 +86,7 @@ for key in ["records", "cart", "wishlist"]:
         st.session_state[key] = []
 
 # ------------------- SIDEBAR -------------------
-st.sidebar.title("🛒 Retail Dashboard")
+st.sidebar.title("Retail Dashboard")
 page = st.sidebar.radio("Navigate", ["Store", "Cart", "Wishlist", "Records & Insights"])
 
 # ------------------- PURCHASE RECORD FORM -------------------
@@ -125,7 +119,7 @@ if save:
 
 # ==================== STORE PAGE ====================
 if page == "Store":
-    st.markdown("<h1 style='text-align:center'>🎯 Product Store</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>Product Store</h1>", unsafe_allow_html=True)
     cols = st.columns(3)
     for i, p in enumerate(PRODUCTS):
         with cols[i % 3]:
@@ -154,7 +148,7 @@ if page == "Store":
 
 # ==================== CART PAGE ====================
 elif page == "Cart":
-    st.markdown("<h1 style='text-align:center'>🛍️ Cart Items</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>Cart Items</h1>", unsafe_allow_html=True)
     if not st.session_state.cart:
         st.info("Cart is empty")
     else:
@@ -173,7 +167,7 @@ elif page == "Cart":
 
 # ==================== WISHLIST PAGE ====================
 elif page == "Wishlist":
-    st.markdown("<h1 style='text-align:center'>💖 Wishlist Items</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>Wishlist Items</h1>", unsafe_allow_html=True)
     if not st.session_state.wishlist:
         st.info("Wishlist is empty")
     else:
@@ -190,7 +184,7 @@ elif page == "Wishlist":
 
 # ==================== RECORDS PAGE ====================
 elif page == "Records & Insights":
-    st.markdown("<h1 style='text-align:center'>📊 Sales Records & Insights</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>Sales Records & Insights</h1>", unsafe_allow_html=True)
     if not st.session_state.records:
         st.info("No purchase records available")
     else:
