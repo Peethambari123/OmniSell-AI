@@ -2,31 +2,41 @@ import streamlit as st
 from agents.recommendation_agent import RecommendationAgent
 from data.catalog import PRODUCTS
 
-st.set_page_config(layout="wide", page_title="Agentic AI Retail Assistant")
+st.set_page_config(
+    page_title="OmniSell AI – Agentic Retail",
+    layout="wide"
+)
 
 # ---------------- SIDEBAR ----------------
-st.sidebar.title("🛍️ Shop")
+st.sidebar.title("🛍️ OmniSell AI")
 
 categories = sorted(set(p["category"] for p in PRODUCTS))
-selected_category = st.sidebar.selectbox("Category", ["All"] + categories)
+occasions = ["Casual", "Formal", "Festive"]
+
+st.sidebar.subheader("Browse Categories")
+selected_category = st.sidebar.selectbox(
+    "Category",
+    ["All"] + categories
+)
 
 st.sidebar.subheader("Occasion")
 selected_occasion = st.sidebar.selectbox(
-    "Choose",
-    ["All", "Casual", "Formal", "Festive"]
+    "Occasion",
+    ["All"] + occasions
 )
 
-st.sidebar.subheader("Why Shop With Us?")
+st.sidebar.markdown("---")
 st.sidebar.markdown("""
-✔ AI-powered recommendations  
+### Why Shop With Us?
+✔ AI-powered personalization  
 ✔ Omnichannel experience  
-✔ Loyalty rewards  
-✔ In-store & online support
+✔ Loyalty benefits  
+✔ In-store & online support  
 """)
 
 # ---------------- HEADER ----------------
 st.title("🛍️ Agentic AI Conversational Retail Assistant")
-st.caption("A full-scale AI-powered omnichannel retail experience")
+st.caption("A complete AI-powered shopping experience like real retail websites")
 
 st.divider()
 
@@ -37,26 +47,31 @@ col1, col2 = st.columns(2)
 
 with col1:
     pref_category = st.selectbox("Interested Category", categories)
-with col2:
-    pref_occasion = st.selectbox("Occasion", ["Casual", "Formal", "Festive"])
 
-if st.button("Get AI Recommendations"):
+with col2:
+    pref_occasion = st.selectbox("Occasion", occasions)
+
+if st.button("✨ Get AI Recommendations"):
     agent = RecommendationAgent()
     prefs = {
         "category": pref_category,
         "occasion": pref_occasion
     }
-    recommendations = agent.run(prefs)
 
+    recommendations = agent.run(prefs)
 
     st.subheader("✨ Recommended For You")
 
-    cols = st.columns(4)
-    for idx, item in enumerate(recommendations):
-        with cols[idx % 4]:
-            st.image(item["image"], use_column_width=True)
-            st.markdown(f"**{item['name']}**")
-            st.markdown(f"₹{item['price']}")
+    if not recommendations:
+        st.warning("No matching products found.")
+    else:
+        cols = st.columns(4)
+        for idx, item in enumerate(recommendations):
+            with cols[idx % 4]:
+                st.image(item["image"], use_column_width=True)
+                st.markdown(f"**{item['name']}**")
+                st.markdown(f"₹{item['price']}")
+                st.caption(f"{item['category']} | {item['occasion']}")
 
 st.divider()
 
@@ -82,4 +97,4 @@ for idx, product in enumerate(filtered_products):
         st.image(product["image"], use_column_width=True)
         st.markdown(f"**{product['name']}**")
         st.markdown(f"₹{product['price']}")
-        st.caption(product["category"] + " | " + product["occasion"])
+        st.caption(f"{product['category']} | {product['occasion']}")
