@@ -2,7 +2,10 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 from catalog import PRODUCTS
+from streamlit_chat import message
+import openai
 
+# ---------------- PAGE SETUP ----------------
 st.set_page_config("OmniRetail IQ", layout="wide")
 
 # ---------------- STYLE ----------------
@@ -14,19 +17,17 @@ img { border-radius: 10px; }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- SESSION ----------------
-for key in ["records", "cart", "wishlist"]:
+# ---------------- SESSION STATE ----------------
+for key in ["records", "cart", "wishlist", "chat_history"]:
     if key not in st.session_state:
         st.session_state[key] = []
 
 # ---------------- SIDEBAR ----------------
 st.sidebar.title("Retail Control Panel")
-
-page = st.sidebar.radio("Navigate", ["Store", "Cart", "Wishlist", "Records & Insights"])
+page = st.sidebar.radio("Navigate", ["Store", "Cart", "Wishlist", "Records & Insights", "AI Assistant"])
 
 # ---- Purchase Entry ----
 st.sidebar.subheader("Add Purchase Record")
-
 with st.sidebar.form("purchase_form"):
     customer = st.text_input("Customer Name")
     product_name = st.selectbox("Product", [p["name"] for p in PRODUCTS])
@@ -55,7 +56,6 @@ if save:
 # ================= STORE =================
 if page == "Store":
     st.title("Product Store")
-
     cols = st.columns(3)
     for i, p in enumerate(PRODUCTS):
         with cols[i % 3]:
@@ -63,17 +63,14 @@ if page == "Store":
             st.subheader(p["name"])
             st.write(p["category"])
             st.markdown(f"<div class='price'>₹ {p['price']}</div>", unsafe_allow_html=True)
-
             if st.button("Add to Cart", key=f"cart_{i}"):
                 st.session_state.cart.append(p)
-
             if st.button("Add to Wishlist", key=f"wish_{i}"):
                 st.session_state.wishlist.append(p)
 
 # ================= CART =================
 elif page == "Cart":
     st.title("Cart Items")
-
     if not st.session_state.cart:
         st.info("Cart is empty")
     else:
@@ -84,24 +81,49 @@ elif page == "Cart":
 # ================= WISHLIST =================
 elif page == "Wishlist":
     st.title("Wishlist Items")
-
     if not st.session_state.wishlist:
         st.info("Wishlist is empty")
     else:
         df = pd.DataFrame(st.session_state.wishlist)
         st.dataframe(df[["name", "category", "price"]], use_container_width=True)
 
-# ================= RECORDS & AI INSIGHTS =================
-else:
+# ================= RECORDS & INSIGHTS =================
+elif page == "Records & Insights":
     st.title("Stored Records")
-
     if not st.session_state.records:
         st.info("No records available")
     else:
         df = pd.DataFrame(st.session_state.records)
         st.dataframe(df, use_container_width=True)
-
         st.markdown("### AI Insights")
         st.write(f"Total Revenue: ₹ {df['Total Amount'].sum()}")
         st.write(f"Average Rating: {round(df['Rating'].mean(), 2)}")
         st.write(f"Top Category: {df['Category'].mode()[0]}")
+
+# ================= AI ASSISTANT =================
+else:
+    st.title("OmniRetail AI Assistant 🤖")
+    user_input = st.text_input("You:", key="ai_input")
+
+    if user_input:
+        # Save user message
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
+
+        # OpenAI API call
+        openai.api_key = "YOUR_OPENAI_API_KEY"  # Replace with your key
+        messages = [{"role": "system", "content": "You are OmniRetail IQ AI Assistant. Answer clearly about products, prices, categories, shopping advice."}] + st.session_state.chat_history
+
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini",
+            messages=messages
+        )
+
+        answer = response['choices'][0]['message']['content']
+        st.session_state.chat_history.append({"role": "assistant", "content": answer})
+
+    # Display chat history
+    for chat in st.session_state.chat_history:
+        if chat["role"] == "user":
+            message(chat["content"], is_user=True)
+        else:
+            message(chat["content"])
