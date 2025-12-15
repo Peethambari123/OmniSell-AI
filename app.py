@@ -46,7 +46,8 @@ if st.button("Get AI Recommendations"):
         "category": pref_category,
         "occasion": pref_occasion
     }
-    recommendations = agent.recommend(prefs)
+    recommendations = agent.run(prefs)
+
 
     st.subheader("✨ Recommended For You")
 
