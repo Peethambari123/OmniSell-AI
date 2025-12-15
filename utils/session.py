@@ -1,5 +1,3 @@
-import streamlit as st
-
 def init_session():
     if "context" not in st.session_state:
         st.session_state.context = {
@@ -7,6 +5,11 @@ def init_session():
             "user_id": "USER_01",
             "channel": "web",
             "cart": [],
-            "conversation": []
+            "conversation": [],
+            "preferences": {
+                "category": None,
+                "occasion": None,
+                "budget": None
+            }
         }
     return st.session_state.context
