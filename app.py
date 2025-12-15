@@ -32,7 +32,7 @@ page = st.sidebar.radio(
 # ——————— Gemini API Key Input ———————
 st.sidebar.subheader("Gemini API Key (for AI Assistant)")
 api_key_input = st.sidebar.text_input(
-    "Enter your Gemini API Key",
+    "AIzaSyAPS9hfiQ-IlF3HzybSt-SGR_ZP4S3ONgU",
     type="password",
     key="gemini_key"
 )
