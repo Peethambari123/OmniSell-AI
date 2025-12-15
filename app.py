@@ -1,34 +1,36 @@
 import streamlit as st
+import pandas as pd
 from datetime import datetime
 from catalog import PRODUCTS
 
 st.set_page_config("OmniRetail IQ", layout="wide")
 
-# ---------- CLEAN IMAGE-FIRST UI ----------
+# ---------------- STYLE ----------------
 st.markdown("""
 <style>
 body { background-color: #f6f8fc; }
-img { border-radius: 12px; }
-.price { font-weight: 600; color: #2563eb; }
+.price { color: #2563eb; font-weight: 600; }
+img { border-radius: 10px; }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- SESSION ----------
+# ---------------- SESSION ----------------
 for key in ["records", "cart", "wishlist"]:
     if key not in st.session_state:
         st.session_state[key] = []
 
-# ---------- SIDEBAR ----------
+# ---------------- SIDEBAR ----------------
 st.sidebar.title("Retail Control Panel")
-page = st.sidebar.radio("Navigate", ["Store", "Cart", "Wishlist"])
 
-# ---------- PURCHASE ENTRY ----------
-st.sidebar.subheader("Save Customer Purchase")
+page = st.sidebar.radio("Navigate", ["Store", "Cart", "Wishlist", "Records & Insights"])
 
-with st.sidebar.form("purchase"):
+# ---- Purchase Entry ----
+st.sidebar.subheader("Add Purchase Record")
+
+with st.sidebar.form("purchase_form"):
     customer = st.text_input("Customer Name")
     product_name = st.selectbox("Product", [p["name"] for p in PRODUCTS])
-    qty = st.number_input("Quantity", 1, 10, 1)
+    quantity = st.number_input("Quantity", 1, 10, 1)
     payment = st.selectbox("Payment Mode", ["Cash", "UPI", "Card"])
     rating = st.slider("Rating", 1, 5, 3)
     feedback = st.text_area("Feedback")
@@ -37,30 +39,18 @@ with st.sidebar.form("purchase"):
 if save:
     p = next(x for x in PRODUCTS if x["name"] == product_name)
     st.session_state.records.append({
-        "customer": customer,
-        "product": p["name"],
-        "category": p["category"],
-        "qty": qty,
-        "payment": payment,
-        "rating": rating,
-        "feedback": feedback,
-        "total": p["price"] * qty,
-        "time": datetime.now().strftime("%d-%m-%Y %H:%M")
+        "Customer": customer,
+        "Product": p["name"],
+        "Category": p["category"],
+        "Price": p["price"],
+        "Quantity": quantity,
+        "Total Amount": p["price"] * quantity,
+        "Payment Mode": payment,
+        "Rating": rating,
+        "Feedback": feedback,
+        "Date & Time": datetime.now().strftime("%d-%m-%Y %H:%M")
     })
-    st.sidebar.success("Saved")
-
-# ---------- AI INSIGHTS ----------
-st.sidebar.markdown("---")
-st.sidebar.subheader("AI Insights")
-
-if st.session_state.records:
-    revenue = sum(r["total"] for r in st.session_state.records)
-    avg_rating = round(sum(r["rating"] for r in st.session_state.records) / len(st.session_state.records), 2)
-    st.sidebar.write(f"Total Revenue: ₹{revenue}")
-    st.sidebar.write(f"Average Rating: {avg_rating}/5")
-    st.sidebar.write("High-rated items should be promoted")
-else:
-    st.sidebar.write("No data yet")
+    st.sidebar.success("Record saved")
 
 # ================= STORE =================
 if page == "Store":
@@ -82,33 +72,36 @@ if page == "Store":
 
 # ================= CART =================
 elif page == "Cart":
-    st.title("Your Cart")
+    st.title("Cart Items")
 
     if not st.session_state.cart:
         st.info("Cart is empty")
     else:
-        total = 0
-        for p in st.session_state.cart:
-            st.write(f"{p['name']} - ₹{p['price']}")
-            total += p["price"]
-        st.success(f"Total Cart Value: ₹ {total}")
+        df = pd.DataFrame(st.session_state.cart)
+        st.dataframe(df[["name", "category", "price"]], use_container_width=True)
+        st.success(f"Total: ₹ {df['price'].sum()}")
 
 # ================= WISHLIST =================
 elif page == "Wishlist":
-    st.title("Your Wishlist")
+    st.title("Wishlist Items")
 
     if not st.session_state.wishlist:
         st.info("Wishlist is empty")
     else:
-        for p in st.session_state.wishlist:
-            st.write(f"{p['name']} - ₹{p['price']}")
+        df = pd.DataFrame(st.session_state.wishlist)
+        st.dataframe(df[["name", "category", "price"]], use_container_width=True)
 
-# ---------- STORED DATA ----------
-st.markdown("---")
-st.subheader("Stored Purchase Records")
+# ================= RECORDS & AI INSIGHTS =================
+else:
+    st.title("Stored Records")
 
-for r in st.session_state.records:
-    st.write(
-        f"{r['customer']} | {r['product']} | {r['qty']} | "
-        f"{r['payment']} | ₹{r['total']} | Rating {r['rating']}"
-    )
+    if not st.session_state.records:
+        st.info("No records available")
+    else:
+        df = pd.DataFrame(st.session_state.records)
+        st.dataframe(df, use_container_width=True)
+
+        st.markdown("### AI Insights")
+        st.write(f"Total Revenue: ₹ {df['Total Amount'].sum()}")
+        st.write(f"Average Rating: {round(df['Rating'].mean(), 2)}")
+        st.write(f"Top Category: {df['Category'].mode()[0]}")
