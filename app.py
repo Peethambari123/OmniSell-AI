@@ -1,24 +1,52 @@
 import streamlit as st
-from agents.sales_agent import SalesAgent
-from utils.session import init_session
+from agents.recommendation_agent import RecommendationAgent
+from agents.inventory_agent import InventoryAgent
+from agents.loyalty_agent import LoyaltyAgent
 
 st.set_page_config(page_title="Agentic Retail AI", layout="centered")
-
-# Initialize session
-session = init_session()
-
 st.title("🛍️ Agentic AI Conversational Retail Assistant")
 
-# Display conversation
-for role, msg in session["conversation"]:
-    with st.chat_message(role):
-        st.write(msg)
+# ---------------- Customer Profile ----------------
+st.header("👤 Customer Profile")
 
-# User input
-user_input = st.chat_input("What are you looking for today?")
+with st.form("customer_form"):
+    name = st.text_input("Customer Name")
+    age = st.number_input("Age", min_value=15, max_value=80)
+    gender = st.selectbox("Gender", ["Male", "Female", "Other"])
 
-if user_input:
-    sales_agent = SalesAgent()
-    reply = sales_agent.handle(user_input, session)
-    st.rerun()
+    category = st.selectbox("Interested Category", ["Shirts", "Pants", "Jeans"])
+    occasion = st.selectbox("Occasion", ["Casual", "Formal", "Festive"])
+    budget = st.selectbox("Budget", ["Under 2000", "2000-3000", "Above 3000"])
 
+    submitted = st.form_submit_button("Get Recommendations")
+
+# ---------------- Agentic Processing ----------------
+if submitted:
+    customer_context = {
+        "name": name,
+        "age": age,
+        "gender": gender,
+        "category": category,
+        "occasion": occasion,
+        "budget": budget
+    }
+
+    reco_agent = RecommendationAgent()
+    inventory_agent = InventoryAgent()
+    loyalty_agent = LoyaltyAgent()
+
+    reco = reco_agent.run(customer_context)
+    inv = inventory_agent.run(reco)
+    final = loyalty_agent.run(inv)
+
+    # ---------------- Output ----------------
+    st.success("🎯 Personalized Recommendations Ready!")
+
+    for item in final["cart"]:
+        st.markdown(f"""
+        ### 👕 {item['name']}
+        💰 Price: ₹{item['price']}  
+        📦 Availability: {inv['availability']}
+        """)
+
+    st.info(final["message"])
