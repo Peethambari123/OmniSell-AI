@@ -11,37 +11,37 @@ st.markdown("""
 <style>
 /* ---------- App Background ---------- */
 body, .stApp {
-    background: linear-gradient(120deg, #f0f4f8, #e3f2fd);
-    color: #333333;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    color: #1e3a8a;
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* ---------- Sidebar ---------- */
 [data-testid="stSidebar"] {
-    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
     color: #ffffff;
 }
 
 /* ---------- Headers ---------- */
 h1, h2, h3, h4 { 
-    font-family: 'Segoe UI', sans-serif; 
-    color: #0d47a1; 
+    color: #1e3a8a; 
+    font-family: 'Segoe UI', sans-serif;
 }
 
 /* ---------- Product Cards ---------- */
 .stImage > img { 
     border-radius: 20px; 
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
 /* Product text styles */
-.product-name { color: #1565c0; font-size: 1.2em; font-weight: bold; }
-.product-category { color: #2e7d32; font-size: 1em; font-style: italic; }
-.product-price { color: #f57c00; font-weight: bold; font-size: 1.1em; }
+.product-name { color: #0d6efd; font-size: 1.2em; font-weight: bold; }
+.product-category { color: #10b981; font-size: 1em; font-style: italic; }
+.product-price { color: #f97316; font-weight: bold; font-size: 1.1em; }
 
 /* ---------- Buttons ---------- */
 .stButton>button {
-    background: linear-gradient(90deg, #ff9800, #fbc02d);
+    background: linear-gradient(90deg, #facc15, #f59e0b);
     color: #ffffff;
     font-weight: bold;
     border-radius: 12px;
@@ -49,34 +49,34 @@ h1, h2, h3, h4 {
     transition: all 0.3s ease;
 }
 .stButton>button:hover {
-    background: linear-gradient(90deg, #fbc02d, #ff9800);
+    background: linear-gradient(90deg, #f59e0b, #facc15);
     transform: scale(1.05);
 }
 
-/* ---------- Tables ---------- */
-.dataframe tbody tr:nth-child(even) { background-color: #e3f2fd; }
-.dataframe tbody tr:nth-child(odd) { background-color: #bbdefb; }
-.dataframe thead { background-color: #1976d2; color: #ffffff; font-weight: bold; }
+/* ---------- Remove / Critical Button ---------- */
+.remove-button { color: #ef4444; font-weight: bold; }
 
-/* ---------- Remove / Warning Buttons ---------- */
-.remove-button { color: #d32f2f; font-weight: bold; }
+/* ---------- Tables ---------- */
+.dataframe tbody tr:nth-child(even) { background-color: #e0f2fe; }
+.dataframe tbody tr:nth-child(odd) { background-color: #bae6fd; }
+.dataframe thead { background-color: #2563eb; color: #ffffff; font-weight: bold; }
 
 /* ---------- Sidebar Inputs ---------- */
 .stTextInput>div>input, .stSelectbox>div>div>div>input, .stNumberInput>div>input, .stSlider>div>div>div>input {
     border-radius: 8px;
-    border: 1px solid #1976d2;
+    border: 1px solid #4facfe;
     padding: 6px;
 }
 
 /* ---------- Alerts ---------- */
-.stSuccess { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #388e3c; color: #ffffff; }
-.stInfo { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #0288d1; color: #ffffff; }
-.stWarning { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #fbc02d; color: #333333; }
-.stError { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #d32f2f; color: #ffffff; }
+.stSuccess { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #16a34a; color: #ffffff; }
+.stInfo { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #0ea5e9; color: #ffffff; }
+.stWarning { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #fbbf24; color: #333333; }
+.stError { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #ef4444; color: #ffffff; }
 
 /* Smooth scrollbar for sidebar */
 [data-testid="stSidebar"]::-webkit-scrollbar { width: 6px; }
-[data-testid="stSidebar"]::-webkit-scrollbar-thumb { background-color: #1976d2; border-radius: 3px; }
+[data-testid="stSidebar"]::-webkit-scrollbar-thumb { background-color: #4facfe; border-radius: 3px; }
 </style>
 """, unsafe_allow_html=True)
 
