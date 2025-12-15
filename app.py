@@ -1,90 +1,113 @@
 import streamlit as st
 from data.catalog import PRODUCTS
 
-st.set_page_config(
-    page_title="OmniSell AI – Smart Retail",
-    layout="wide"
-)
+st.set_page_config(page_title="OmniRetail IQ", layout="wide")
+
+# ---------------- SESSION STORAGE ----------------
+if "customers" not in st.session_state:
+    st.session_state.customers = []
+
+if "sales" not in st.session_state:
+    st.session_state.sales = []
 
 # ---------------- SIDEBAR ----------------
-st.sidebar.title("🛍️ OmniSell AI")
+st.sidebar.title("🛍️ OmniRetail IQ")
+page = st.sidebar.radio(
+    "Navigation",
+    ["🛒 Store", "👤 Add Customer", "📊 Customer Dashboard", "🧠 AI Insights"]
+)
 
-categories = sorted(set(p["category"] for p in PRODUCTS))
-occasions = sorted(set(p["occasion"] for p in PRODUCTS))
+# ---------------- STORE PAGE ----------------
+if page == "🛒 Store":
+    st.title("🛒 Smart Retail Store")
 
-st.sidebar.subheader("Filter Products")
-selected_category = st.sidebar.selectbox("Category", ["All"] + categories)
-selected_occasion = st.sidebar.selectbox("Occasion", ["All"] + occasions)
+    genders = sorted(set(p["gender"] for p in PRODUCTS))
+    categories = sorted(set(p["category"] for p in PRODUCTS))
+    occasions = sorted(set(p["occasion"] for p in PRODUCTS))
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("""
-### Why OmniSell AI?
-✔ Personalized retail experience  
-✔ Omnichannel ready design  
-✔ Loyalty driven shopping  
-✔ Smart recommendations  
-""")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        g = st.selectbox("Gender", ["All"] + genders)
+    with col2:
+        c = st.selectbox("Category", ["All"] + categories)
+    with col3:
+        o = st.selectbox("Occasion", ["All"] + occasions)
 
-st.sidebar.markdown("📍 **Stores:** Bangalore | Mumbai | Hyderabad")
+    filtered = PRODUCTS
+    if g != "All":
+        filtered = [p for p in filtered if p["gender"] == g]
+    if c != "All":
+        filtered = [p for p in filtered if p["category"] == c]
+    if o != "All":
+        filtered = [p for p in filtered if p["occasion"] == o]
 
-# ---------------- HEADER ----------------
-st.title("🛍️ OmniSell AI – Smart Retail Experience")
-st.caption("A modern, AI-inspired retail platform inspired by real shopping websites")
+    cols = st.columns(4)
+    for i, p in enumerate(filtered):
+        with cols[i % 4]:
+            st.image(p["image"], use_column_width=True)
+            st.markdown(f"**{p['name']}**")
+            st.markdown(f"₹{p['price']}")
+            if st.button("Sell", key=p["id"]):
+                st.session_state.sales.append(p)
+                st.success("Added to sales")
 
-st.divider()
+# ---------------- ADD CUSTOMER ----------------
+elif page == "👤 Add Customer":
+    st.title("👤 Add / Update Customer")
 
-# ---------------- CUSTOMER INTEREST ----------------
-st.subheader("🎯 Tell Us Your Interest")
+    with st.form("customer_form"):
+        name = st.text_input("Customer Name")
+        age = st.number_input("Age", 1, 100)
+        gender = st.selectbox("Gender", ["Male", "Female", "Other"])
+        preferences = st.multiselect(
+            "Interested Categories",
+            sorted(set(p["category"] for p in PRODUCTS))
+        )
+        submitted = st.form_submit_button("Save Customer")
 
-col1, col2 = st.columns(2)
+    if submitted:
+        st.session_state.customers.append({
+            "name": name,
+            "age": age,
+            "gender": gender,
+            "preferences": preferences,
+            "purchases": []
+        })
+        st.success("Customer saved successfully")
 
-with col1:
-    interest_category = st.selectbox("What are you looking for?", categories)
-with col2:
-    interest_occasion = st.selectbox("For which occasion?", occasions)
+# ---------------- CUSTOMER DASHBOARD ----------------
+elif page == "📊 Customer Dashboard":
+    st.title("📊 Customer Dashboard")
 
-if st.button("✨ Show Matching Products"):
-    st.subheader("✨ Products Matching Your Interest")
+    for cust in st.session_state.customers:
+        st.subheader(cust["name"])
+        st.caption(f"Age: {cust['age']} | Gender: {cust['gender']}")
+        st.write("Preferences:", ", ".join(cust["preferences"]))
 
-    matches = [
-        p for p in PRODUCTS
-        if p["category"] == interest_category
-        and p["occasion"] == interest_occasion
-    ]
+        spent = sum(p["price"] for p in cust.get("purchases", []))
+        st.success(f"Total Spent: ₹{spent}")
 
-    if not matches:
-        st.warning("No products found. Try different options.")
-    else:
-        cols = st.columns(4)
-        for i, item in enumerate(matches):
-            with cols[i % 4]:
-                st.image(item["image"], use_column_width=True)
-                st.markdown(f"**{item['name']}**")
-                st.markdown(f"₹{item['price']}")
-                st.caption(f"{item['category']} | {item['occasion']}")
+# ---------------- AI INSIGHTS ----------------
+else:
+    st.title("🧠 AI Retail Insights")
 
-st.divider()
+    total_sales = len(st.session_state.sales)
+    revenue = sum(p["price"] for p in st.session_state.sales)
 
-# ---------------- FULL CATALOG ----------------
-st.subheader("🛒 Explore Full Collection")
+    st.metric("Total Products Sold", total_sales)
+    st.metric("Total Revenue", f"₹{revenue}")
 
-filtered_products = PRODUCTS
+    if st.session_state.sales:
+        top_category = max(
+            set(p["category"] for p in st.session_state.sales),
+            key=lambda x: sum(1 for p in st.session_state.sales if p["category"] == x)
+        )
+        st.success(f"🔥 Most Sold Category: {top_category}")
 
-if selected_category != "All":
-    filtered_products = [
-        p for p in filtered_products if p["category"] == selected_category
-    ]
-
-if selected_occasion != "All":
-    filtered_products = [
-        p for p in filtered_products if p["occasion"] == selected_occasion
-    ]
-
-cols = st.columns(4)
-
-for i, product in enumerate(filtered_products):
-    with cols[i % 4]:
-        st.image(product["image"], use_column_width=True)
-        st.markdown(f"**{product['name']}**")
-        st.markdown(f"₹{product['price']}")
-        st.caption(f"{product['category']} | {product['occasion']}")
+    st.info("""
+    **AI Insight Summary**
+    - Customers prefer casual & festive wear
+    - Ethnic products have higher average value
+    - Repeat purchases likely in same category
+    - Kids & festive wear peaks seasonally
+    """)
