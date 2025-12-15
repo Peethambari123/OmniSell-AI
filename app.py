@@ -11,15 +11,15 @@ st.markdown("""
 <style>
 /* ---------- App Background ---------- */
 body, .stApp {
-    background: linear-gradient(135deg, #e0eafc, #cfdef3);
-    color: #1e40af;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3); /* soft blue gradient */
+    color: #1e40af; /* deep blue text */
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* ---------- Sidebar ---------- */
 [data-testid="stSidebar"] {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #f7fafc;
+    background: linear-gradient(135deg, #667eea, #764ba2); /* violet-blue gradient */
+    color: #f7fafc; /* off-white text */
 }
 
 /* ---------- Sidebar Inputs ---------- */
@@ -27,23 +27,23 @@ body, .stApp {
 .stNumberInput>div>input, .stSlider>div>div>div>input,
 .stTextArea>div>textarea {
     border-radius: 8px;
-    border: 1px solid #5a67d8;
+    border: 1px solid #5a67d8; /* blue border */
     padding: 6px;
-    background-color: #ffffff;
-    color: #1e40af;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    background-color: #ffffff; /* white input box */
+    color: #1e40af; /* deep blue text */
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.15); /* subtle blue shadow */
 }
 
 /* ---------- Headers ---------- */
 h1, h2, h3, h4 { 
-    color: #2b6cb0; 
+    color: #2b6cb0; /* royal blue */
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* ---------- Product Cards ---------- */
 .stImage > img { 
     border-radius: 20px; 
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25); /* soft purple-blue shadow */
 }
 
 /* Product text styles */
@@ -53,7 +53,7 @@ h1, h2, h3, h4 {
 
 /* ---------- Buttons ---------- */
 .stButton>button {
-    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    background: linear-gradient(90deg, #fbbf24, #f59e0b); /* gold-orange */
     color: #ffffff;
     font-weight: bold;
     border-radius: 12px;
@@ -66,18 +66,18 @@ h1, h2, h3, h4 {
 }
 
 /* ---------- Remove / Critical Button ---------- */
-.remove-button { color: #dc2626; font-weight: bold; }
+.remove-button { color: #ef4444; font-weight: bold; } /* red without black */
 
 /* ---------- Tables ---------- */
-.dataframe tbody tr:nth-child(even) { background-color: #ebf4ff; }
-.dataframe tbody tr:nth-child(odd) { background-color: #dbeafe; }
-.dataframe thead { background-color: #4c51bf; color: #f7fafc; font-weight: bold; }
+.dataframe tbody tr:nth-child(even) { background-color: #ebf4ff; } /* soft light blue */
+.dataframe tbody tr:nth-child(odd) { background-color: #dbeafe; } /* very light blue */
+.dataframe thead { background-color: #4c51bf; color: #f7fafc; font-weight: bold; } /* violet header, off-white text */
 
 /* ---------- Alerts ---------- */
 .stSuccess { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #059669; color: #ffffff; }
 .stInfo { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #3b82f6; color: #ffffff; }
-.stWarning { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #f59e0b; color: #1e3a8a; }
-.stError { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #dc2626; color: #ffffff; }
+.stWarning { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #f59e0b; color: #fef3c7; }
+.stError { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #ef4444; color: #ffffff; }
 
 /* Smooth scrollbar for sidebar */
 [data-testid="stSidebar"]::-webkit-scrollbar { width: 6px; }
