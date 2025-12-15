@@ -1,9 +1,8 @@
 import streamlit as st
-from agents.recommendation_agent import RecommendationAgent
 from data.catalog import PRODUCTS
 
 st.set_page_config(
-    page_title="OmniSell AI – Agentic Retail",
+    page_title="OmniSell AI – Smart Retail",
     layout="wide"
 )
 
@@ -11,63 +10,54 @@ st.set_page_config(
 st.sidebar.title("🛍️ OmniSell AI")
 
 categories = sorted(set(p["category"] for p in PRODUCTS))
-occasions = ["Casual", "Formal", "Festive"]
+occasions = sorted(set(p["occasion"] for p in PRODUCTS))
 
-st.sidebar.subheader("Browse Categories")
-selected_category = st.sidebar.selectbox(
-    "Category",
-    ["All"] + categories
-)
-
-st.sidebar.subheader("Occasion")
-selected_occasion = st.sidebar.selectbox(
-    "Occasion",
-    ["All"] + occasions
-)
+st.sidebar.subheader("Filter Products")
+selected_category = st.sidebar.selectbox("Category", ["All"] + categories)
+selected_occasion = st.sidebar.selectbox("Occasion", ["All"] + occasions)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("""
-### Why Shop With Us?
-✔ AI-powered personalization  
-✔ Omnichannel experience  
-✔ Loyalty benefits  
-✔ In-store & online support  
+### Why OmniSell AI?
+✔ Personalized retail experience  
+✔ Omnichannel ready design  
+✔ Loyalty driven shopping  
+✔ Smart recommendations  
 """)
 
+st.sidebar.markdown("📍 **Stores:** Bangalore | Mumbai | Hyderabad")
+
 # ---------------- HEADER ----------------
-st.title("🛍️ Agentic AI Conversational Retail Assistant")
-st.caption("A complete AI-powered shopping experience like real retail websites")
+st.title("🛍️ OmniSell AI – Smart Retail Experience")
+st.caption("A modern, AI-inspired retail platform inspired by real shopping websites")
 
 st.divider()
 
 # ---------------- CUSTOMER INTEREST ----------------
-st.subheader("🎯 Personalize Your Shopping")
+st.subheader("🎯 Tell Us Your Interest")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    pref_category = st.selectbox("Interested Category", categories)
-
+    interest_category = st.selectbox("What are you looking for?", categories)
 with col2:
-    pref_occasion = st.selectbox("Occasion", occasions)
+    interest_occasion = st.selectbox("For which occasion?", occasions)
 
-if st.button("✨ Get AI Recommendations"):
-    agent = RecommendationAgent()
-    prefs = {
-        "category": pref_category,
-        "occasion": pref_occasion
-    }
+if st.button("✨ Show Matching Products"):
+    st.subheader("✨ Products Matching Your Interest")
 
-    recommendations = agent.run(prefs)
+    matches = [
+        p for p in PRODUCTS
+        if p["category"] == interest_category
+        and p["occasion"] == interest_occasion
+    ]
 
-    st.subheader("✨ Recommended For You")
-
-    if not recommendations:
-        st.warning("No matching products found.")
+    if not matches:
+        st.warning("No products found. Try different options.")
     else:
         cols = st.columns(4)
-        for idx, item in enumerate(recommendations):
-            with cols[idx % 4]:
+        for i, item in enumerate(matches):
+            with cols[i % 4]:
                 st.image(item["image"], use_column_width=True)
                 st.markdown(f"**{item['name']}**")
                 st.markdown(f"₹{item['price']}")
@@ -76,7 +66,7 @@ if st.button("✨ Get AI Recommendations"):
 st.divider()
 
 # ---------------- FULL CATALOG ----------------
-st.subheader("🛒 Explore Our Collection")
+st.subheader("🛒 Explore Full Collection")
 
 filtered_products = PRODUCTS
 
@@ -92,8 +82,8 @@ if selected_occasion != "All":
 
 cols = st.columns(4)
 
-for idx, product in enumerate(filtered_products):
-    with cols[idx % 4]:
+for i, product in enumerate(filtered_products):
+    with cols[i % 4]:
         st.image(product["image"], use_column_width=True)
         st.markdown(f"**{product['name']}**")
         st.markdown(f"₹{product['price']}")
