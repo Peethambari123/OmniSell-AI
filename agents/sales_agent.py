@@ -7,41 +7,50 @@ class SalesAgent:
         self.fulfillment = FulfillmentAgent()
 
     def handle(self, user_input, session):
-        user_input = user_input.lower()
+        user_input = user_input.lower().strip()
         session["conversation"].append(("user", user_input))
 
         prefs = session["preferences"]
+        stage = session["stage"]
 
-        # Step 1: Capture category
-        if "shirt" in user_input:
-            prefs["category"] = "shirts"
-            reply = "Nice choice 👕 Is this for a casual, formal, or festive occasion?"
+        # ---------------- START ----------------
+        if stage == "START":
+            if any(cat in user_input for cat in ["shirt", "shirts", "pant", "pants", "jeans"]):
+                prefs["category"] = user_input
+                session["stage"] = "ASK_OCCASION"
+                reply = "Sure 😊 Is this for a casual, formal, or festive occasion?"
+            else:
+                reply = "What are you shopping for today? (shirts, pants, jeans)"
 
-        # Step 2: Capture occasion
-        elif user_input in ["casual", "formal", "festive"]:
-            prefs["occasion"] = user_input
-            reply = "Got it 👍 Do you have a budget range in mind?"
+        # ---------------- ASK OCCASION ----------------
+        elif stage == "ASK_OCCASION":
+            if user_input in ["casual", "formal", "festive"]:
+                prefs["occasion"] = user_input
+                session["stage"] = "ASK_BUDGET"
+                reply = "Got it 👍 Do you have a budget range in mind?"
+            else:
+                reply = "Please choose one: casual, formal, or festive."
 
-        # Step 3: Capture budget
-        elif any(word in user_input for word in ["under", "below", "above", "between"]):
+        # ---------------- ASK BUDGET ----------------
+        elif stage == "ASK_BUDGET":
             prefs["budget"] = user_input
+            session["stage"] = "RECOMMEND"
 
-            # Now enough info → recommend
-            reco_data = self.reco.run(session)
-            inv_data = self.inventory.run(reco_data)
-            final = self.loyalty.run(inv_data)
+            reco = self.reco.run(session)
+            inv = self.inventory.run(reco)
+            final = self.loyalty.run(inv)
 
             session["cart"] = final["cart"]
             reply = final["message"]
 
-        # Step 4: Payment
+        # ---------------- PAYMENT ----------------
         elif "pay" in user_input:
             payment = self.payment.run(session)
             final = self.fulfillment.run(payment)
             reply = final["message"]
 
         else:
-            reply = "Tell me what you’re shopping for 😊 (e.g., shirts, jeans, dresses)"
+            reply = "Let me know if you want to continue shopping 😊"
 
         session["conversation"].append(("assistant", reply))
         return reply
