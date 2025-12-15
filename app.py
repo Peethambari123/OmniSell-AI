@@ -106,19 +106,20 @@ else:
     user_input = st.text_input("You:", key="ai_input")
 
     if user_input:
-        # Save user message
         st.session_state.chat_history.append({"role": "user", "content": user_input})
 
-        # OpenAI API call
         openai.api_key = "YOUR_OPENAI_API_KEY"  # Replace with your key
-        messages = [{"role": "system", "content": "You are OmniRetail IQ AI Assistant. Answer clearly about products, prices, categories, shopping advice."}] + st.session_state.chat_history
 
-        response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
+        messages = [
+            {"role": "system", "content": "You are OmniRetail IQ AI Assistant. Answer clearly about products, prices, categories, shopping advice."}
+        ] + st.session_state.chat_history
+
+        response = openai.chat.completions.create(
+            model="gpt-5-mini",
             messages=messages
         )
 
-        answer = response['choices'][0]['message']['content']
+        answer = response.choices[0].message.content
         st.session_state.chat_history.append({"role": "assistant", "content": answer})
 
     # Display chat history
