@@ -9,9 +9,15 @@ st.set_page_config("OmniRetail IQ", layout="wide")
 # ------------------- STYLES -------------------
 st.markdown("""
 <style>
-/* Deep Blue-Violet Gradient Background */
-body { 
+/* Entire App Background */
+body, .stApp {
     background: linear-gradient(135deg, #1a237e, #3949ab, #512da8, #651fff);
+    color: #ffffff;
+}
+
+/* Sidebar Background */
+[data-testid="stSidebar"] {
+    background: linear-gradient(135deg, #283593, #512da8);
     color: #ffffff;
 }
 
@@ -128,10 +134,12 @@ elif page == "Cart":
         st.success(f"Grand Total: ₹ {df['Total'].sum()}")
 
         st.markdown("### Remove Item")
+        remove_index = None
         for i, item in enumerate(st.session_state.cart):
             if st.button(f"Remove {item['name']}", key=f"remove_cart_{i}"):
-                st.session_state.cart.pop(i)
-                st.experimental_rerun()
+                remove_index = i
+        if remove_index is not None:
+            st.session_state.cart.pop(remove_index)
 
 # ==================== WISHLIST PAGE ====================
 elif page == "Wishlist":
@@ -143,10 +151,12 @@ elif page == "Wishlist":
         st.dataframe(df[["name", "category", "price"]], use_container_width=True)
 
         st.markdown("### Remove Item")
+        remove_index = None
         for i, item in enumerate(st.session_state.wishlist):
             if st.button(f"Remove {item['name']}", key=f"remove_wish_{i}"):
-                st.session_state.wishlist.pop(i)
-                st.experimental_rerun()
+                remove_index = i
+        if remove_index is not None:
+            st.session_state.wishlist.pop(remove_index)
 
 # ==================== RECORDS PAGE ====================
 elif page == "Records & Insights":
