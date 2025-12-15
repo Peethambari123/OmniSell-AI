@@ -6,53 +6,83 @@ from catalog import PRODUCTS
 
 st.set_page_config("OmniRetail IQ", layout="wide")
 
-# ------------------- STYLES -------------------
+# ------------------- STYLES (VIBRANT DASHING THEME) -------------------
 st.markdown("""
 <style>
-/* Entire App Background */
+/* ---------- Entire App Background ---------- */
 body, .stApp {
-    background: linear-gradient(135deg, #1a237e, #3949ab, #512da8, #651fff);
-    color: #ffffff;
+    background: linear-gradient(120deg, #fdfbfb, #ebedee);
+    color: #333333;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Sidebar Background */
+/* ---------- Sidebar ---------- */
 [data-testid="stSidebar"] {
-    background: linear-gradient(135deg, #283593, #512da8);
-    color: #ffffff;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: #333333;
 }
 
-/* Headers */
+/* ---------- Headers ---------- */
 h1, h2, h3, h4 { 
     font-family: 'Segoe UI', sans-serif; 
-    color: #ffd700; 
+    color: #ff3d00; 
 }
 
-/* Product images no border */
+/* ---------- Product Cards ---------- */
 .stImage > img { 
-    border-radius: 15px; 
+    border-radius: 20px; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-/* Product info */
-.product-name { color: #ffeb3b; font-size: 1.2em; font-weight: bold; }
-.product-category { color: #00bcd4; font-size: 1em; }
-.product-price { color: #ff4081; font-weight: bold; font-size: 1.1em; }
+/* Product text styles */
+.product-name { color: #ff5722; font-size: 1.2em; font-weight: bold; }
+.product-category { color: #4caf50; font-size: 1em; font-style: italic; }
+.product-price { color: #673ab7; font-weight: bold; font-size: 1.1em; }
 
-/* Buttons with gradient */
+/* ---------- Buttons ---------- */
 .stButton>button {
     background: linear-gradient(90deg, #ff6d00, #ffab00);
-    color: #1a237e;
+    color: #ffffff;
     font-weight: bold;
     border-radius: 12px;
-    padding: 8px 12px;
+    padding: 8px 14px;
+    transition: all 0.3s ease;
 }
 .stButton>button:hover {
     background: linear-gradient(90deg, #ffab00, #ff6d00);
+    transform: scale(1.05);
 }
 
-/* Tables with colored rows */
-.dataframe tbody tr:nth-child(even) { background-color: #512da8; }
-.dataframe tbody tr:nth-child(odd) { background-color: #673ab7; }
-.dataframe thead { background-color: #651fff; color: #ffd700; font-weight: bold; }
+/* ---------- Tables ---------- */
+.dataframe tbody tr:nth-child(even) { background-color: #ffe0b2; }
+.dataframe tbody tr:nth-child(odd) { background-color: #fff3e0; }
+.dataframe thead { background-color: #ff9800; color: #ffffff; font-weight: bold; }
+
+/* ---------- Remove Item Headers ---------- */
+h3 { color: #d32f2f; }
+
+/* ---------- Sidebar Inputs ---------- */
+.stTextInput>div>input, .stSelectbox>div>div>div>input, .stNumberInput>div>input, .stSlider>div>div>div>input {
+    border-radius: 8px;
+    border: 1px solid #cccccc;
+    padding: 6px;
+}
+
+/* ---------- Alerts ---------- */
+.stSuccess, .stInfo, .stWarning, .stError {
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+
+/* Smooth scrollbar for sidebar */
+[data-testid="stSidebar"]::-webkit-scrollbar {
+    width: 6px;
+}
+[data-testid="stSidebar"]::-webkit-scrollbar-thumb {
+    background-color: #ff6d00;
+    border-radius: 3px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -62,7 +92,7 @@ for key in ["records", "cart", "wishlist"]:
         st.session_state[key] = []
 
 # ------------------- SIDEBAR -------------------
-st.sidebar.title("Retail Dashboard Control Panel")
+st.sidebar.title("🛒 Retail Dashboard")
 page = st.sidebar.radio("Navigate", ["Store", "Cart", "Wishlist", "Records & Insights"])
 
 # ------------------- PURCHASE RECORD FORM -------------------
@@ -74,7 +104,7 @@ with st.sidebar.form("purchase_form"):
     payment = st.selectbox("Payment Mode", ["Cash", "UPI", "Card"])
     rating = st.slider("Rating", 1, 5, 3)
     feedback = st.text_area("Feedback")
-    save = st.form_submit_button("Save")
+    save = st.form_submit_button("Save Record")
 
 if save:
     p = next((x for x in PRODUCTS if x["name"] == product_name), None)
@@ -91,11 +121,11 @@ if save:
             "Feedback": feedback,
             "Date & Time": datetime.now().strftime("%d-%m-%Y %H:%M")
         })
-        st.sidebar.success("Record saved!")
+        st.sidebar.success(f"Record saved for {customer}!")
 
 # ==================== STORE PAGE ====================
 if page == "Store":
-    st.markdown("<h1 style='text-align:center'>Product Store</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>🎯 Product Store</h1>", unsafe_allow_html=True)
     cols = st.columns(3)
     for i, p in enumerate(PRODUCTS):
         with cols[i % 3]:
@@ -124,7 +154,7 @@ if page == "Store":
 
 # ==================== CART PAGE ====================
 elif page == "Cart":
-    st.markdown("<h1 style='text-align:center'>Cart Items</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>🛍️ Cart Items</h1>", unsafe_allow_html=True)
     if not st.session_state.cart:
         st.info("Cart is empty")
     else:
@@ -143,7 +173,7 @@ elif page == "Cart":
 
 # ==================== WISHLIST PAGE ====================
 elif page == "Wishlist":
-    st.markdown("<h1 style='text-align:center'>Wishlist Items</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>💖 Wishlist Items</h1>", unsafe_allow_html=True)
     if not st.session_state.wishlist:
         st.info("Wishlist is empty")
     else:
@@ -160,7 +190,7 @@ elif page == "Wishlist":
 
 # ==================== RECORDS PAGE ====================
 elif page == "Records & Insights":
-    st.markdown("<h1 style='text-align:center'>Sales Records & Insights</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center'>📊 Sales Records & Insights</h1>", unsafe_allow_html=True)
     if not st.session_state.records:
         st.info("No purchase records available")
     else:
