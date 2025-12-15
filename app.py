@@ -23,15 +23,23 @@ body, .stApp {
 }
 
 /* ---------- Sidebar Inputs ---------- */
-.stTextInput>div>input, .stSelectbox>div>div>div>input, 
-.stNumberInput>div>input, .stSlider>div>div>div>input,
+.stTextInput>div>input,
+.stSelectbox>div>div>div>input,
+.stNumberInput>div>input,
+.stSlider>div>div>div>input,
 .stTextArea>div>textarea {
     border-radius: 8px;
-    border: 1px solid #5a67d8; /* blue border */
+    border: 1px solid #5a67d8;
     padding: 6px;
-    background-color: #ffffff; /* white input box */
-    color: #1e40af; /* deep blue text */
-    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.15); /* subtle blue shadow */
+    background-color: #ffffff;
+    color: #1e40af !important; /* deep blue text inside input */
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.15);
+}
+
+/* Placeholder text color */
+.stTextInput>div>input::placeholder,
+.stTextArea>div>textarea::placeholder {
+    color: #4c51bf !important; /* dark violet placeholder */
 }
 
 /* ---------- Headers ---------- */
@@ -43,7 +51,7 @@ h1, h2, h3, h4 {
 /* ---------- Product Cards ---------- */
 .stImage > img { 
     border-radius: 20px; 
-    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25); /* soft purple-blue shadow */
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25);
 }
 
 /* Product text styles */
@@ -53,7 +61,7 @@ h1, h2, h3, h4 {
 
 /* ---------- Buttons ---------- */
 .stButton>button {
-    background: linear-gradient(90deg, #fbbf24, #f59e0b); /* gold-orange */
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
     color: #ffffff;
     font-weight: bold;
     border-radius: 12px;
@@ -66,12 +74,12 @@ h1, h2, h3, h4 {
 }
 
 /* ---------- Remove / Critical Button ---------- */
-.remove-button { color: #ef4444; font-weight: bold; } /* red without black */
+.remove-button { color: #ef4444; font-weight: bold; }
 
 /* ---------- Tables ---------- */
-.dataframe tbody tr:nth-child(even) { background-color: #ebf4ff; } /* soft light blue */
-.dataframe tbody tr:nth-child(odd) { background-color: #dbeafe; } /* very light blue */
-.dataframe thead { background-color: #4c51bf; color: #f7fafc; font-weight: bold; } /* violet header, off-white text */
+.dataframe tbody tr:nth-child(even) { background-color: #ebf4ff; }
+.dataframe tbody tr:nth-child(odd) { background-color: #dbeafe; }
+.dataframe thead { background-color: #4c51bf; color: #f7fafc; font-weight: bold; }
 
 /* ---------- Alerts ---------- */
 .stSuccess { border-radius: 12px; padding: 10px 15px; font-weight: bold; background-color: #059669; color: #ffffff; }
