@@ -10,6 +10,7 @@ def init_session():
                 "category": None,
                 "occasion": None,
                 "budget": None
-            }
+            },
+            "stage": "START"   # 👈 conversation state
         }
     return st.session_state.context
