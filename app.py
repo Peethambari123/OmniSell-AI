@@ -6,35 +6,52 @@ from catalog import PRODUCTS
 
 st.set_page_config("OmniRetail IQ", layout="wide")
 
-# ------------------- STYLES -------------------
+# ------------------- FULL COLOR STYLES -------------------
 st.markdown("""
 <style>
-body { background-color: #f0f8ff; }
-h1, h2, h3, h4 { color: #333333; font-family: 'Segoe UI', sans-serif; }
-.price { color: #ff4b4b; font-weight: bold; font-size: 1.1em; }
+body { background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff6f91, #845ec2); }
+
+h1, h2, h3, h4 { font-family: 'Comic Sans MS', cursive; color: #ffe066; }
+
+.price { color: #ff6f61; font-weight: bold; font-size: 1.2em; }
+
 .card {
-    background: linear-gradient(145deg, #ffffff, #e0f7fa);
-    border-radius: 15px;
+    background: linear-gradient(145deg, #ff9a9e, #fad0c4);
+    border-radius: 20px;
     padding: 15px;
     margin-bottom: 20px;
-    box-shadow: 5px 5px 15px #b0e0e6, -5px -5px 15px #ffffff;
+    box-shadow: 5px 5px 15px #f7b2b7, -5px -5px 15px #ffdac1;
 }
+
 .button-buy {
-    background-color: #ff6f61;
-    color: white;
+    background: linear-gradient(45deg, #ff6f61, #ff9472);
+    color: #ffffff;
     font-weight: bold;
-    border-radius: 10px;
-    padding: 8px 12px;
+    border-radius: 12px;
+    padding: 10px 15px;
     margin-top: 10px;
+    text-align: center;
 }
+
 .button-wish {
-    background-color: #4caf50;
-    color: white;
+    background: linear-gradient(45deg, #845ec2, #d65db1);
+    color: #ffffff;
     font-weight: bold;
-    border-radius: 10px;
-    padding: 8px 12px;
+    border-radius: 12px;
+    padding: 10px 15px;
     margin-top: 5px;
 }
+
+.stButton>button {
+    background: linear-gradient(45deg, #ff6f61, #ff9472);
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+.dataframe tbody tr:nth-child(even) { background-color: #ffb3ba; }
+.dataframe tbody tr:nth-child(odd) { background-color: #ffdfba; }
+.dataframe thead { background-color: #ffdfba; color: #6a0572; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -44,7 +61,7 @@ for key in ["records", "cart", "wishlist"]:
         st.session_state[key] = []
 
 # ------------------- SIDEBAR -------------------
-st.sidebar.title("🎨 Retail Dashboard Control Panel")
+st.sidebar.markdown("<h2 style='color:#ffd700'>🎨 Retail Dashboard</h2>", unsafe_allow_html=True)
 page = st.sidebar.radio("Navigate", ["🏬 Store", "🛒 Cart", "💖 Wishlist", "📊 Records & Insights"])
 
 # ------------------- PURCHASE RECORD FORM -------------------
@@ -77,17 +94,17 @@ if save:
 
 # ==================== STORE PAGE ====================
 if page == "🏬 Store":
-    st.title("🏬 Product Store")
+    st.markdown("<h1 style='text-align:center; color:#ffde59'>🏬 Product Store</h1>", unsafe_allow_html=True)
     cols = st.columns(3)
     for i, p in enumerate(PRODUCTS):
         with cols[i % 3]:
-            st.markdown(f"<div class='card'>", unsafe_allow_html=True)
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
             st.image(p["image"], use_column_width=True)
-            st.markdown(f"### {p['name']}")
-            st.markdown(f"Category: **{p['category']}**")
+            st.markdown(f"<h3 style='color:#ff6f61'>{p['name']}</h3>", unsafe_allow_html=True)
+            st.markdown(f"<b>Category:</b> <span style='color:#845ec2'>{p['category']}</span>", unsafe_allow_html=True)
             st.markdown(f"<div class='price'>₹ {p['price']}</div>", unsafe_allow_html=True)
 
-            if st.button("🛒 Add to Cart", key=f"cart_{i}", help="Add this product to cart"):
+            if st.button("🛒 Add to Cart", key=f"cart_{i}"):
                 existing = next((item for item in st.session_state.cart if item["name"] == p["name"]), None)
                 if existing:
                     existing["Quantity"] += 1
@@ -98,7 +115,7 @@ if page == "🏬 Store":
                     st.session_state.cart.append(item_copy)
                     st.success(f"{p['name']} added to cart")
 
-            if st.button("💖 Add to Wishlist", key=f"wish_{i}", help="Add this product to wishlist"):
+            if st.button("💖 Add to Wishlist", key=f"wish_{i}"):
                 if p not in st.session_state.wishlist:
                     st.session_state.wishlist.append(p)
                     st.success(f"{p['name']} added to wishlist")
@@ -108,7 +125,7 @@ if page == "🏬 Store":
 
 # ==================== CART PAGE ====================
 elif page == "🛒 Cart":
-    st.title("🛒 Cart Items")
+    st.markdown("<h1 style='text-align:center; color:#ff6f61'>🛒 Cart Items</h1>", unsafe_allow_html=True)
     if not st.session_state.cart:
         st.info("Your cart is empty 🛍️")
     else:
@@ -125,7 +142,7 @@ elif page == "🛒 Cart":
 
 # ==================== WISHLIST PAGE ====================
 elif page == "💖 Wishlist":
-    st.title("💖 Wishlist Items")
+    st.markdown("<h1 style='text-align:center; color:#845ec2'>💖 Wishlist Items</h1>", unsafe_allow_html=True)
     if not st.session_state.wishlist:
         st.info("Your wishlist is empty ✨")
     else:
@@ -140,7 +157,7 @@ elif page == "💖 Wishlist":
 
 # ==================== RECORDS PAGE ====================
 elif page == "📊 Records & Insights":
-    st.title("📊 Sales Records & Insights")
+    st.markdown("<h1 style='text-align:center; color:#ffd700'>📊 Sales Records & Insights</h1>", unsafe_allow_html=True)
     if not st.session_state.records:
         st.info("No purchase records available yet 📁")
     else:
@@ -148,6 +165,6 @@ elif page == "📊 Records & Insights":
         st.dataframe(df, use_container_width=True)
 
         st.markdown("### 📈 Insights")
-        st.markdown(f"**Total Revenue:** 💰 ₹ {df['Total Amount'].sum()}")
-        st.markdown(f"**Average Rating:** ⭐ {round(df['Rating'].mean(),2)}")
-        st.markdown(f"**Top Category:** 🏷️ {df['Category'].mode()[0]}")
+        st.markdown(f"<span style='color:#ff6f61; font-weight:bold'>Total Revenue:</span> 💰 ₹ {df['Total Amount'].sum()}", unsafe_allow_html=True)
+        st.markdown(f"<span style='color:#845ec2; font-weight:bold'>Average Rating:</span> ⭐ {round(df['Rating'].mean(),2)}", unsafe_allow_html=True)
+        st.markdown(f"<span style='color:#ffde59; font-weight:bold'>Top Category:</span> 🏷️ {df['Category'].mode()[0]}", unsafe_allow_html=True)
