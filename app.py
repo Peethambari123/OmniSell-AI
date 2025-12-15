@@ -9,36 +9,44 @@ st.set_page_config("OmniRetail IQ", layout="wide")
 # ------------------- STYLES -------------------
 st.markdown("""
 <style>
-/* Body background with smooth gradient */
-body { background: linear-gradient(120deg, #a8edea, #fed6e3, #fbc2eb, #a6c1ee); }
+/* Deep Blue-Violet Gradient Background */
+body { 
+    background: linear-gradient(135deg, #1a237e, #3949ab, #512da8, #651fff);
+    color: #ffffff;
+}
 
 /* Headers */
-h1, h2, h3, h4 { font-family: 'Segoe UI', sans-serif; color: #4a148c; }
+h1, h2, h3, h4 { 
+    font-family: 'Segoe UI', sans-serif; 
+    color: #ffd700; 
+}
 
 /* Product images no border */
-.stImage > img { border-radius: 15px; }
+.stImage > img { 
+    border-radius: 15px; 
+}
 
 /* Product info */
-.product-name { color: #d500f9; font-size: 1.2em; font-weight: bold; }
-.product-category { color: #6a1b9a; font-size: 1em; }
+.product-name { color: #ffeb3b; font-size: 1.2em; font-weight: bold; }
+.product-category { color: #00bcd4; font-size: 1em; }
 .product-price { color: #ff4081; font-weight: bold; font-size: 1.1em; }
 
-/* Buttons */
+/* Buttons with gradient */
 .stButton>button {
-    background: linear-gradient(90deg, #ff8a65, #ff6d00);
-    color: #ffffff;
+    background: linear-gradient(90deg, #ff6d00, #ffab00);
+    color: #1a237e;
     font-weight: bold;
     border-radius: 12px;
     padding: 8px 12px;
 }
 .stButton>button:hover {
-    background: linear-gradient(90deg, #ff6d00, #ff8a65);
+    background: linear-gradient(90deg, #ffab00, #ff6d00);
 }
 
-/* Tables */
-.dataframe tbody tr:nth-child(even) { background-color: #ffe0b2; }
-.dataframe tbody tr:nth-child(odd) { background-color: #ffd54f; }
-.dataframe thead { background-color: #ffb74d; color: #4a148c; font-weight: bold; }
+/* Tables with colored rows */
+.dataframe tbody tr:nth-child(even) { background-color: #512da8; }
+.dataframe tbody tr:nth-child(odd) { background-color: #673ab7; }
+.dataframe thead { background-color: #651fff; color: #ffd700; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
