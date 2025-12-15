@@ -1,19 +1,14 @@
 class LoyaltyAgent:
     def run(self, data):
-        total = sum(item["price"] for item in data["cart"])
-        discount = int(total * 0.1)
-        final_price = total - discount
+        price = data["cart"][0]["price"]
+        discount = int(price * 0.1)
+        final_price = price - discount
 
-        return {
-            "cart": data["cart"],
-            "message": f"""
-🎉 Loyalty discount applied!
+        data["message"] = f"""
+🎉 Loyalty Offer Applied!
 
-🛒 Total: ₹{total}
-💸 Discount: ₹{discount}
-✅ Payable: ₹{final_price}
-
-Would you like to proceed to payment?
+Original Price: ₹{price}  
+Discount: ₹{discount}  
+Final Price: ₹{final_price}
 """
-        }
-
+        return data
